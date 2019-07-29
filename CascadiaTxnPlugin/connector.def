@@ -1,0 +1,4 @@
+<plugin>
+   <file name="CascadiaTxnPlugin.dll"/>
+   <load env="Service"/>
+</plugin>
