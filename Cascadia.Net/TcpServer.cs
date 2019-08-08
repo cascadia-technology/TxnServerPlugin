@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -75,9 +76,9 @@ namespace Cascadia.Net
                         lock (_lock)
                         {
                             OnInfoMessage("Accepting new client connection");
-                            var task = HandleTcpClient(listener.AcceptTcpClient());
                             _connections++;
                             OnInfoMessage($"Connected Clients: {_connections}, Limit: {_options.MaxConnections}");
+                            var task = HandleTcpClient(listener.AcceptTcpClient());
                         }
 
                     }
@@ -116,6 +117,7 @@ namespace Cascadia.Net
             {
                 remoteEndPoint = tcpClient.Client.RemoteEndPoint as IPEndPoint;
                 localEndPoint = tcpClient.Client.LocalEndPoint as IPEndPoint;
+                if (!IsRemoteEndpointAllowed(remoteEndPoint)) throw new UnauthorizedAccessException($"Unauthorized connection from {remoteEndPoint.Address}:{remoteEndPoint.Port}");
                 OnInfoMessage(
                     $"Receiving connection from {remoteEndPoint} on {localEndPoint}");
                 using (tcpClient)
@@ -159,6 +161,16 @@ namespace Cascadia.Net
                     OnInfoMessage($"Connected Clients: {_connections}, Limit: {_options.MaxConnections}");
                 }
             }
+        }
+
+        private bool IsRemoteEndpointAllowed(IPEndPoint remoteEndPoint)
+        {
+            if (_options.AllowedRemoteEndpoints.Any(r => r == "*")) return true;
+            if (remoteEndPoint.Address.Equals(IPAddress.Loopback) || remoteEndPoint.Address.Equals(IPAddress.IPv6Loopback))
+                return true;
+            if (_options.AllowedRemoteEndpoints.Contains(remoteEndPoint.Address.ToString()))
+                return true;
+            return false;
         }
 
         private static void SetKeepAlive(TcpClient tcpClient, bool on, uint keepAliveTime , uint keepAliveInterval )

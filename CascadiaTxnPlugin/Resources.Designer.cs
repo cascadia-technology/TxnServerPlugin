@@ -61,6 +61,24 @@ namespace CascadiaTxnPlugin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allowed External Addresses.
+        /// </summary>
+        internal static string AllowedExternalAddresses {
+            get {
+                return ResourceManager.GetString("AllowedExternalAddresses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specify a comma-delimited list of addresses, or * to allow all.
+        /// </summary>
+        internal static string AllowedExternalAddressesToolTip {
+            get {
+                return ResourceManager.GetString("AllowedExternalAddressesToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cascadia Transaction Server.
         /// </summary>
         internal static string CascadiaTransactionServer {
@@ -106,6 +124,24 @@ namespace CascadiaTxnPlugin {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local IP Address.
+        /// </summary>
+        internal static string Interface {
+            get {
+                return ResourceManager.GetString("Interface", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specify which IP address to listen on or use 0.0.0.0 for all interfaces.
+        /// </summary>
+        internal static string InterfaceToolTip {
+            get {
+                return ResourceManager.GetString("InterfaceToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Local Port.
         /// </summary>
         internal static string LocalPort {
@@ -129,6 +165,33 @@ namespace CascadiaTxnPlugin {
         internal static string LocalPortToolTip {
             get {
                 return ResourceManager.GetString("LocalPortToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cascadia Technology LLC.
+        /// </summary>
+        internal static string Manufacturer {
+            get {
+                return ResourceManager.GetString("Manufacturer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 6c41793e-4f7b-450c-a1ff-8ff258d5ffa3.
+        /// </summary>
+        internal static string PluginId {
+            get {
+                return ResourceManager.GetString("PluginId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cascadia Transaction Server.
+        /// </summary>
+        internal static string ProductName {
+            get {
+                return ResourceManager.GetString("ProductName", resourceCulture);
             }
         }
     }

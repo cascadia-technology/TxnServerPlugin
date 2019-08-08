@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllowedExternalAddresses" xml:space="preserve">
+    <value>Allowed External Addresses</value>
+  </data>
+  <data name="AllowedExternalAddressesToolTip" xml:space="preserve">
+    <value>Specify a comma-delimited list of addresses, or * to allow all</value>
+  </data>
   <data name="CascadiaTransactionServer" xml:space="preserve">
     <value>Cascadia Transaction Server</value>
   </data>
@@ -132,6 +138,12 @@
   <data name="EnableKeepAlivesToolTip" xml:space="preserve">
     <value>Recommended to detect dropped client connections</value>
   </data>
+  <data name="Interface" xml:space="preserve">
+    <value>Local IP Address</value>
+  </data>
+  <data name="InterfaceToolTip" xml:space="preserve">
+    <value>Specify which IP address to listen on or use 0.0.0.0 for all interfaces</value>
+  </data>
   <data name="LocalPort" xml:space="preserve">
     <value>Local Port</value>
   </data>
@@ -140,5 +152,14 @@
   </data>
   <data name="LocalPortToolTip" xml:space="preserve">
     <value>Connector instance will listen on this port</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>Cascadia Technology LLC</value>
+  </data>
+  <data name="PluginId" xml:space="preserve">
+    <value>6c41793e-4f7b-450c-a1ff-8ff258d5ffa3</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Cascadia Transaction Server</value>
   </data>
 </root>

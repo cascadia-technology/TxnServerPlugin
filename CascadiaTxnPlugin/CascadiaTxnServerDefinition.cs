@@ -7,16 +7,16 @@ namespace CascadiaTxnPlugin
 {
     public class CascadiaTxnServerDefinition : ConnectorDefinition
     {
-        public override Guid Id { get; } = new Guid("6c41793e-4f7b-450c-a1ff-8ff258d5ffa3");
+        public override Guid Id { get; } = new Guid(Resources.PluginId);
 
-        public override string Name { get; } = "Cascadia Transaction Server";
+        public override string Name { get; } = Resources.ProductName;
 
         public override string DisplayName => Name;
 
         private static readonly Version ConnectorVersion = new Version(1, 0);
         public override string VersionText => ConnectorVersion.ToString();
 
-        public override string Manufacturer { get; } = "Cascadia Technology LLC";
+        public override string Manufacturer { get; } = Resources.Manufacturer;
 
         public override void Init()
         {
@@ -47,9 +47,14 @@ namespace CascadiaTxnPlugin
         {
             return new List<ConnectorPropertyDefinition>
             {
-                new ConnectorIntegerPropertyDefinition(nameof(Resources.LocalPort), Resources.LocalPort, 5123, Resources.LocalPortToolTip) { MinValue = 1, MaxValue = 65535 },
-                new ConnectorBooleanPropertyDefinition(nameof(Resources.Echo), Resources.Echo, false, Resources.EchoToolTip),
-                new ConnectorBooleanPropertyDefinition(nameof(Resources.EnableKeepAlives), Resources.EnableKeepAlives, true, Resources.EnableKeepAlivesToolTip),
+                new ConnectorStringPropertyDefinition(nameof(Resources.Interface), Resources.Interface, "0.0.0.0", Resources.InterfaceToolTip),
+                new ConnectorIntegerPropertyDefinition(nameof(Resources.LocalPort), Resources.LocalPort, 5123,
+                    Resources.LocalPortToolTip) {MinValue = 1, MaxValue = 65535},
+                new ConnectorStringPropertyDefinition(nameof(Resources.AllowedExternalAddresses), Resources.AllowedExternalAddresses, string.Empty, Resources.AllowedExternalAddressesToolTip),
+                new ConnectorBooleanPropertyDefinition(nameof(Resources.Echo), Resources.Echo, false,
+                    Resources.EchoToolTip),
+                new ConnectorBooleanPropertyDefinition(nameof(Resources.EnableKeepAlives), Resources.EnableKeepAlives,
+                    true, Resources.EnableKeepAlivesToolTip),
             };
         }
     }

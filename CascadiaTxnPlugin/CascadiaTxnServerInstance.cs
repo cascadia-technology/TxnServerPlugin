@@ -4,9 +4,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using VideoOS.Platform.Transact.Connector;
 using VideoOS.Platform.Transact.Connector.Property;
+using Util = VideoOS.Platform.Transact.Connector.Util;
 
 namespace CascadiaTxnPlugin
 {
@@ -45,10 +45,12 @@ namespace CascadiaTxnPlugin
 
         public override ConnectorPropertyValidationResult ValidateProperties(IEnumerable<ConnectorProperty> properties)
         {
+            var settings = properties.ToList();
             var newPort =
-                properties.Single(p => p.Key == nameof(Resources.LocalPort)) as ConnectorIntegerProperty;
+                settings.Single(p => p.Key == nameof(Resources.LocalPort)) as ConnectorIntegerProperty;
             if (newPort == null) 
                 return ConnectorPropertyValidationResult.CreateInvalidResult(nameof(Resources.LocalPort), $"Property not found: {Resources.LocalPort}");
+            
             var portInUse = PortRegistry.Where(pair => pair.Key != _instanceId && pair.Value == newPort.Value).ToList();
             if (portInUse.Count != 0)
             {
@@ -60,27 +62,41 @@ namespace CascadiaTxnPlugin
                     nameof(Resources.LocalPort), 
                     string.Format(Resources.LocalPortInUse, newPort));
             }
+
+            var networkInterface =
+                settings.Single(s => s.Key == nameof(Resources.Interface)) as ConnectorStringProperty;
+            var ipAddress = Cascadia.Net.Util.GetIpAddressByString(networkInterface.Value);
+            if (networkInterface.Value != "*" && ipAddress == null) return ConnectorPropertyValidationResult.CreateInvalidResult(
+                nameof(Resources.Interface),
+                $"Local IP Address '{networkInterface.Value}' not found");
+
             return ConnectorPropertyValidationResult.ValidResult;
         }
+
+        
 
         private void StartInstance()
         {
             if (_tcpServer != null) Close();
-            Util.Log(
-                false, 
-                $"{GetType().FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name} [{_instanceId}]", 
-                $"Starting {Resources.CascadiaTransactionServer} listener on port {_properties.LocalPort}");
-            _tcpServer = new TcpServer(new TcpServerOptions()
+            var options = new TcpServerOptions
             {
-                Echo = _properties.Echo, 
-                EnableKeepAlive = _properties.EnableKeepAlives, 
-                LocalEndpoint = new IPEndPoint(IPAddress.Any, _properties.LocalPort), 
+                Echo = _properties.Echo,
+                EnableKeepAlive = _properties.EnableKeepAlives,
+                LocalEndpoint = new IPEndPoint(_properties.LocalIp, _properties.LocalPort),
+                AllowedRemoteEndpoints = _properties.AllowedExternalAddresses,
                 MaxConnections = 1
-            });
+            };
+            _tcpServer = new TcpServer(options);
             _tcpServer.BytesReceived += (sender, bytes) => _txnReceiver.WriteRawData(bytes);
             _tcpServer.ErrorMessage += (sender, exception) =>
                 Util.Log(true, "Cascadia.Net.TcpServer", exception.ToString());
             _tcpServer.InfoMessage += (sender, s) => Util.Log(false, "Cascadia.Net.TcpServer", s);
+
+            Util.Log(
+                false, 
+                $"{GetType().FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name} [{_instanceId}]", 
+                $"Starting {Resources.CascadiaTransactionServer} listener on {options.LocalEndpoint}");
+
             _tcpServer.Start();
         }
 
@@ -96,6 +112,13 @@ namespace CascadiaTxnPlugin
                     true, 
                     $"{GetType().FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name} [{_instanceId}]", 
                     $"An error occurred while unregistering instance. Port {_properties.LocalPort} may not be available until an Event Server restart.");
+            }
+            else
+            {
+                Util.Log(
+                    false, 
+                    $"{GetType().FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name} [{_instanceId}]", 
+                    $"Successfully unregistered port {port}");
             }
             _tcpServer?.Stop();
         }
