@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Cascadia Transaction Server Plugin"
-#define MyAppVersion "0.10"
+#define MyAppVersion "0.16"
 #define MyAppPublisher "Cascadia Technology LLC"
 
 [Setup]
